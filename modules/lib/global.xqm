@@ -23,7 +23,7 @@ declare variable $global:app-root :=
         substring-before($modulePath, "/modules")
     ;
 (: Get repo.xml to parse global varaibles :)
-declare variable $global:get-config := doc($global:app-root || '/repo-conf.xml');
+declare variable $global:get-config := doc($global:app-root || '/repo-config.xml');
 
 (: Establish data root defined in repo.xml 'data-root' name of eXist app :)
 declare variable $global:data-root := 
@@ -252,7 +252,7 @@ return
  :)
 declare function global:build-sort-string($titlestring as xs:string?, $lang as xs:string?) as xs:string* {
     if($lang = 'ar') then global:ar-sort-string($titlestring)
-    else replace($titlestring,'^[^\p{L}]+|^[aA]\s+|^[aA]l-|^[aA]n\s|^[oO]n\s+[aA]\s+|^[oO]n\s+|^[tT]he\s+[^\p{L}]+|^[tT]he\s+|^A\s+|^''De','')
+    else replace($titlestring,'^\s+|^al-|^On\s+|^The\s+|^A\s+|^''De |^[|^‘|^ʻ|^ʿ|^]|^\d*\W','')
 };
 
 (:~
@@ -319,4 +319,21 @@ declare function global:keyboard-select-menu($input-id as xs:string){
             }
         </ul>
     else ()       
+};
+
+(:~
+ : Syriaca.org specific function to label URI's with human readable labels. 
+ : @param $uri Syriaca.org uri to be used for lookup. 
+ : URI can be a record or a keyword
+ : NOTE: this function will probably slow down the facets.
+:)
+
+declare function global:get-label($uri as item()*){
+if(starts-with($uri,$global:base-uri)) then  
+      let $doc := collection($global:data-root)//tei:idno[@type='URI'][. = concat($uri,"/tei")]
+      return 
+          if(exists($doc)) then
+            replace(string-join(root($doc)//tei:titleStmt[1]/tei:title[1]/text()[1],' '),' — ','')
+          else $uri 
+else $uri
 };

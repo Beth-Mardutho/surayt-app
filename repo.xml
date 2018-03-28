@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <meta xmlns="http://exist-db.org/xquery/repo">
-    <description>surayt</description>
-    <author></author>
+    <description>Surayt Corpus</description>
+    <author/>
     <website>http://surayt.org/</website>
     <status>beta</status>
     <license>GNU-LGPL</license>
@@ -10,45 +9,6 @@
     <target>surayt</target>
     <prepare>pre-install.xql</prepare>
     <finish>post-install.xql</finish>
-    <config>
-        <!-- App title -->
-        <title></title>
-        <!-- App description -->
-        <description/>
-        <!-- Contact email -->
-        <contact></contact>
-        <!-- Logo name (assumes path to logo is $app-root/resources/img/) -->
-        <logo></logo>
-        <!-- Web Site URL -->
-        <url>http://surayt.org/</url>
-        <!-- Root of app for building dynamic links. Default is eXist app root -->
-        <nav-base>/exist/apps/surayt</nav-base>
-        <!-- eXist app root for app deployment-->
-        <app-root>surayt</app-root>
-        <!-- eXist data app root for gazetteer data -->
-        <data-root>surayt-data</data-root>
-        <!-- Base URI for identifiers in app data -->
-        <base_uri>https://surayt.org</base_uri>
-        <!-- Map rendering -->
-        <maps>
-            <option>google</option>
-            <option selected="true">leaflet</option>
-        </maps>
-        <!-- Keyboard options -->
-        <keyboard-options>
-            <option id="syriac-phonetic">Syriac Phonetic</option>
-            <option id="syriac-standard">Syriac Standard</option>
-            <!--<option id="ms-Arabic (101)">Arabic Mod. Standard</option>-->
-            <option id="qwerty">English QWERTY</option>
-            <!--
-                <option id="ms-Greek">Greek Mod. Standard</option>
-                <option id="ms-Russian">Russian Mod. Standard</option>
-            -->
-        </keyboard-options>
-        <collections>
-            <collection name="corpus" title="Syriac Corpus" app-root="/" data-root="/" record-URI-pattern="https://surayt.org/"/>
-        </collections>
-    </config>
     
-<deployed>2017-05-15T08:52:37.648-04:00</deployed>
+<deployed>2018-03-27T15:57:30.477-04:00</deployed>
 </meta>

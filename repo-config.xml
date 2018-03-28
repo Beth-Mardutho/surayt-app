@@ -1,24 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <meta xmlns="http://exist-db.org/xquery/repo">
-    <description>surayt</description>
-    <author></author>
-    <website>http://surayt.org/</website>
-    <status>beta</status>
-    <license>GNU-LGPL</license>
-    <copyright>true</copyright>
-    <type>application</type>
-    <target>surayt</target>
-    <prepare>pre-install.xql</prepare>
-    <finish>post-install.xql</finish>
     <config>
         <!-- App title -->
-        <title></title>
+        <title>Surayt Corpus</title>
         <!-- App description -->
         <description/>
         <!-- Contact email -->
-        <contact></contact>
+        <contact/>
         <!-- Logo name (assumes path to logo is $app-root/resources/img/) -->
-        <logo></logo>
+        <logo/>
         <!-- Web Site URL -->
         <url>http://surayt.org/</url>
         <!-- Root of app for building dynamic links. Default is eXist app root -->
@@ -28,7 +17,7 @@
         <!-- eXist data app root for gazetteer data -->
         <data-root>surayt-data</data-root>
         <!-- Base URI for identifiers in app data -->
-        <base_uri>https://surayt.org</base_uri>
+        <base_uri>https://suraytcorpus.org</base_uri>
         <!-- Map rendering -->
         <maps>
             <option>google</option>
@@ -46,9 +35,7 @@
             -->
         </keyboard-options>
         <collections>
-            <collection name="corpus" title="Syriac Corpus" app-root="/" data-root="/" record-URI-pattern="https://surayt.org/"/>
+            <collection name="corpus" title="Surayt Corpus" app-root="/" data-root="/" record-URI-pattern="https://suraytcorpus.org/"/>
         </collections>
     </config>
-    
-<deployed>2017-05-15T08:52:37.648-04:00</deployed>
 </meta>
