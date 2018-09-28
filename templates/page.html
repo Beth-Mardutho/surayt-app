@@ -41,7 +41,7 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $('[data-toggle="tooltip"]').tooltip({ container: 'body' })
-                <![CDATA[
+
                 $('.keyboard').keyboard({
                     openOn: null,
                     stayOpen: false,
@@ -52,18 +52,18 @@
                     rtl : true,
                     layout: 'syriac-phonetic',
                     hidden: function(event, keyboard, el){
-                         keyboard.destroy();
+                       //  keyboard.destroy();
                      }
                 });
-                
+
                 $('.keyboard-select').click(function () {
                     var keyboardID = '#' + $(this).data("keyboard-id")
                     var kb = $(keyboardID).getkeyboard();
                     //var kb = $('#searchField').getkeyboard();
                     // change layout based on link ID
                     kb.options.layout = this.id
-                    // open keyboard if layout is different, or time from it last closing is > 200 ms
-                    if (kb.last.layout !== kb.options.layout || (new Date().getTime() - kb.last.eventTime) > 200) {
+                    // open keyboard if layout is different, or time from it last closing is &gt; 200 ms
+                    if (kb.last.layout !== kb.options.layout || (new Date().getTime() - kb.last.eventTime) &gt; 200) {
                         kb.reveal();
                     }
                 });
@@ -73,7 +73,7 @@
                     $('.selectableFont').not('.syr').css('font-family', selectedFont);
                     $("*:lang(syr)").css('font-family', selectedFont)
                 });
-                ]]>
+
             })
         </script>
     </head>
@@ -139,7 +139,7 @@ West Syriac (what font do we current use here)
                                 </a>
                                 <ul class="dropdown-menu" id="swap-font">
                                     <li>
-                                        <a href="#" class="swap-font" id="DefaultSelect" data-font-id="EstrangeloEdessa">Default</a>
+                                        <a href="#" class="swap-font" id="DefaultSelect" data-font-id="SertoBatnan">Default</a>
                                     </li>
                                     <li>
                                         <a href="#" class="swap-font" id="EstrangeloEdessaSelect" data-font-id="EstrangeloEdessa">Estrangelo Edessa</a>

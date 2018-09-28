@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="xar" name="surayt">
+<project default="xar" name="e-surayt">
     <xmlproperty file="expath-pkg.xml"/>
     <property name="project.version" value="${package(version)}"/>
-    <property name="project.app" value="surayt"/>
+    <property name="project.app" value="e-surayt"/>
     <property name="build.dir" value="build"/>
     <target name="xar">
         <mkdir dir="${build.dir}"/>

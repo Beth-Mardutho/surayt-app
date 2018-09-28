@@ -9,15 +9,15 @@
         <!-- Logo name (assumes path to logo is $app-root/resources/img/) -->
         <logo/>
         <!-- Web Site URL -->
-        <url>http://surayt.org/</url>
+        <url>https://surayt.bethmardutho.org/</url>
         <!-- Root of app for building dynamic links. Default is eXist app root -->
-        <nav-base>/exist/apps/surayt</nav-base>
+        <nav-base>/exist/apps/e-surayt</nav-base>
         <!-- eXist app root for app deployment-->
-        <app-root>surayt</app-root>
+        <app-root>e-surayt</app-root>
         <!-- eXist data app root for gazetteer data -->
-        <data-root>surayt-data</data-root>
+        <data-root>e-surayt-data</data-root>
         <!-- Base URI for identifiers in app data -->
-        <base_uri>https://suraytcorpus.org</base_uri>
+        <base_uri>https://surayt.bethmardutho.org</base_uri>
         <!-- Map rendering -->
         <maps>
             <option>google</option>
@@ -35,7 +35,7 @@
             -->
         </keyboard-options>
         <collections>
-            <collection name="corpus" title="Surayt Corpus" app-root="/" data-root="/" record-URI-pattern="https://suraytcorpus.org/"/>
+            <collection name="corpus" title="Surayt Corpus" app-root="/" data-root="/" record-URI-pattern="https://surayt.bethmardutho.org/"/>
         </collections>
     </config>
 </meta>
