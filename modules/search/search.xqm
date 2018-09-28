@@ -6,7 +6,7 @@ import module namespace page="http://syriaca.org/page" at "../lib/paging.xqm";
 import module namespace rel="http://syriaca.org/related" at "../lib/get-related.xqm";
 import module namespace facet="http://expath.org/ns/facet" at "../lib/facet.xqm";
 import module namespace facet-defs="http://syriaca.org/facet-defs" at "../facet-defs.xqm";
-import module namespace tei2html="http://syriaca.org/tei2html" at "../lib/tei2html.xqm";
+import module namespace tei2html="http://syriaca.org/tei2html" at "../content-negotiation/tei2html.xqm";
 import module namespace maps="http://syriaca.org/maps" at "../lib/maps.xqm";
 import module namespace common="http://syriaca.org/common" at "common.xqm";
 import module namespace global="http://syriaca.org/global" at "../lib/global.xqm";
@@ -38,13 +38,14 @@ declare variable $search:collection {request:get-parameter('collection', '') cas
 :)
 declare %templates:wrap function search:get-results($node as node(), $model as map(*), $collection as xs:string?, $view as xs:string?){
     let $coll := if($search:collection != '') then $search:collection else $collection
-    let $eval-string :=  search:query-string($collection)
+    let $keyword-query := common:query()
+    let $eval-string :=  concat(search:query-string($collection),facet:facet-filter(facet-defs:facet-definition($collection)))
     return map {"hits" := 
-                if(exists(request:get-parameter-names()) or ($view = 'all')) then 
+                 if(exists(request:get-parameter-names()) or ($view = 'all')) then 
                     if($search:sort-element != '' and $search:sort-element != 'relevance' or $view = 'all') then 
                         for $hit in util:eval($eval-string)
-                        order by global:build-sort-string(page:add-sort-options($hit,$search:sort-element),'') ascending
-                        return $hit   
+                        order by page:add-sort-options($hit,$search:sort-element) ascending
+                        return $hit
                     else if(request:get-parameter('rel', '') != '' and ($search:sort-element = '' or not(exists($search:sort-element)))) then 
                         for $hit in util:eval($eval-string)
                         let $part := xs:integer($hit/child::*/tei:listRelation/tei:relation[@passive[matches(.,request:get-parameter('child-rec', ''))]]/tei:desc[1]/tei:label[@type='order'][1]/@n)
@@ -52,9 +53,6 @@ declare %templates:wrap function search:get-results($node as node(), $model as m
                         return $hit                                                                                               
                     else 
                         for $hit in util:eval($eval-string)
-                       (: let $expanded := util:expand($hit, "expand-xincludes=no")
-                        let $headword := count($expanded/descendant::*[contains(@syriaca-tags,'#syriaca-headword')][descendant::*:match])
-                        let $headword := if($headword gt 0) then $headword + 15 else 0:)
                         order by ft:score($hit) + (count($hit/descendant::tei:bibl) div 100) descending
                         return $hit
                 else ()                        
@@ -78,7 +76,7 @@ if($collection != '') then
        concat("collection('",$global:data-root,"/",$collection,"')//tei:body",search:dynamic-paths($search-config))
     else
         concat("collection('",$global:data-root,"/",$collection,"')//tei:body",
-        data:keyword(),
+        common:keyword(),
         search:persName(),
         search:placeName(), 
         search:title(),
@@ -89,8 +87,7 @@ else
 concat("collection('",$global:data-root,"')//tei:TEI",
     common:keyword(),
     common:xpath-search('.//tei:titleStmt/tei:author',request:get-parameter('author', '')),
-    common:xpath-search('.//tei:body/tei:div1/tei:head/tei:title',request:get-parameter('title', '')), 
-    common:xpath-search('.//tei:body/tei:div1/tei:div2/tei:head',request:get-parameter('section', '')),
+    common:xpath-search('.//tei:titleStmt/tei:title',request:get-parameter('title', '')), 
     search:corpus-id(),
     search:syriaca-id(),
     search:text-id(),
@@ -190,6 +187,13 @@ declare function search:idno(){
     else () 
 };
 
+declare function search:catalog-limit(){
+    for $r in collection($global:data-root)//tei:titleStmt/tei:title[@level="s"]
+    group by $group := $r/@ref
+    order by global:build-sort-string($r[1]/text(),'')
+    return <option value="{concat(';fq-Catalog:',$group)}">{$r[1]/text()}</option>
+};
+
 declare function search:search-string(){
 <span xmlns="http://www.w3.org/1999/xhtml">
 {(
@@ -197,9 +201,9 @@ declare function search:search-string(){
     for  $parameter in $parameters
     return 
         if(request:get-parameter($parameter, '') != '') then
-            if($parameter = 'start' or $parameter = 'sort-element') then ()
-            else if($parameter = 'q') then 
-                (<span class="param">Keyword: </span>,<span class="match">{$search:q}&#160;</span>)
+            if($parameter = 'start' or $parameter = 'sort-element' or $parameter = 'fq') then ()
+            else if($parameter = 'q' or $parameter = 'qs') then 
+                (<span class="param">Keyword: </span>,<span class="match">{request:get-parameter($parameter, '')}&#160;</span>)
             else (<span class="param">{replace(concat(upper-case(substring($parameter,1,1)),substring($parameter,2)),'-',' ')}: </span>,<span class="match">{request:get-parameter($parameter, '')}&#160; </span>)    
         else ())
         }
@@ -325,26 +329,19 @@ function search:show-hits($node as node()*, $model as map(*), $collection as xs:
     <div>{search:build-geojson($node,$model)}</div>
         {
         for $hit at $p in subsequence($model("hits"), $search:start, $search:perpage)
-        let $id := $hit//tei:idno[1]
+        let $id := $hit//tei:idno[@type='URI'][1]
         let $expanded := kwic:expand($hit)
-        order by ft:score($hit) descending
         return
             <div class="row" xmlns="http://www.w3.org/1999/xhtml" style="border-bottom:1px dotted #eee; padding-top:.5em">
                 <div class="col-md-12">
                       <div class="col-md-1" style="margin-right:-1em; padding-top:.25em;">
-                        <span class="badge">
-                            {
-                                if(request:get-parameter('child-rec', '') != '' and ($search:sort-element = '' or not(exists($search:sort-element)))) then
-                                    string($hit/child::*/tei:listRelation/tei:relation[@passive[matches(.,request:get-parameter('child-rec', ''))]]/tei:desc[1]/tei:label[@type='order']/@n)
-                                else $search:start + $p - 1
-                            }
-                        </span>
+                        <span class="badge">{$search:start + $p - 1}</span>
                       </div>
                       <div class="col-md-9" xml:lang="en">
-                        {(tei2html:summary-view($hit, (), $id[1])) }
+                        {tei2html:summary-view($hit, '', $id) }
                         {
                             if($expanded//exist:match) then 
-                                <div class="col-md-9" style="padding-left:3em;">{tei2html:output-kwic($expanded, $id[1])}</div>
+                                tei2html:output-kwic($expanded, $id)
                             else ()
                         }
                       </div>
@@ -394,10 +391,10 @@ return
                         let $id := concat('s',$name)
                         (:<input type="text" label="Headword" name="headword" element="tei:term[@type='headword']" keyboard="yes"/>:)
                         return 
-                            <div class="form-group">
+                            <div class="form-group row">
                                 <label for="{$name}" class="col-sm-2 col-md-3  control-label">{$label}: </label>
-                                <div class="col-sm-10 col-md-9 ">
-                                    <div class="input-group">
+                                <div>
+                                    <div class="input-group col-sm-8 col-md-6">
                                         <input type="text" id="{$id}" name="{$name}" class="form-control keyboard"/>
                                         {
                                             if($input/@keyboard='yes') then 
@@ -437,7 +434,7 @@ declare function search:default-search-form() {
             <xi:include href="{$global:app-root}/searchTips.html"/>
         <div class="well well-small" style="background-color:white; margin-top:2em;">
             <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-10">
                 <!-- Keyword -->
                  <div class="form-group">
                     <label for="q" class="col-sm-2 col-md-3  control-label">Keyword: </label>
@@ -450,12 +447,14 @@ declare function search:default-search-form() {
                                     </button>
                                     {global:keyboard-select-menu('qs')}
                             </div>
+                            <!--
                             <div class="input-group-btn">
                                 <input type="text" id="keywordProximity" name="keywordProximity" class="form-control"/>
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Proximity Operator">
                                         &#160; Proximity *
                                  </button>
                             </div>
+                            -->
                          </div> 
                     </div>
                   </div>
@@ -476,7 +475,7 @@ declare function search:default-search-form() {
                 </div>
                 <div class="form-group">
                     <label for="title" class="col-sm-2 col-md-3  control-label">Title: </label>
-                    <div class="col-sm-10 col-md-9 ">
+                    <div class="col-sm-10 col-md-9">
                         <div class="input-group">
                             <input type="text" id="title" name="title" class="form-control keyboard"/>
                             <div class="input-group-btn">
@@ -485,33 +484,16 @@ declare function search:default-search-form() {
                                     </button>
                                     {global:keyboard-select-menu('title')}
                             </div>
+                            <div class="input-group-btn" style="width:50%;">
+                                <select name="fq" class="form-control">
+                                <option value=""> -- Limit by Catalog -- </option>
+                                {search:catalog-limit()}
+                                </select>
+                            </div>
                          </div>   
                     </div>
                   </div>
-                <div class="form-group">
-                    <label for="section" class="col-sm-2 col-md-3  control-label">Section number: </label>
-                    <div class="col-sm-10 col-md-9 ">
-                        <input type="text" id="section" name="section" class="form-control"/>
-                    </div>
-               </div>                   
-               <div class="form-group">
-                    <label for="corpus-uri" class="col-sm-2 col-md-3  control-label">Corpus URI: </label>
-                    <div class="col-sm-10 col-md-9 ">
-                        <input type="text" id="corpus-uri" name="corpus-uri" class="form-control"/>
-                    </div>
-               </div>                   
-              <div class="form-group">
-                    <label for="syriaca-uri" class="col-sm-2 col-md-3  control-label">Syriaca URI: </label>
-                    <div class="col-sm-10 col-md-9 ">
-                        <input type="text" id="syriaca-uri" name="syriaca-uri" class="form-control"/>
-                    </div>
-               </div> 
-               <div class="form-group">
-                    <label for="text-id" class="col-sm-2 col-md-3  control-label">Text ID Number: </label>
-                    <div class="col-sm-10 col-md-9 ">
-                        <input type="text" id="text-id" name="text-id" class="form-control"/>
-                    </div>
-               </div>
+                  
                </div>
             </div>    
         </div>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package xmlns="http://expath.org/ns/pkg" name="https://surayt.bethmardutho.org/" abbrev="surayt-corpus" version="0.15" spec="1.0">
+<package xmlns="http://expath.org/ns/pkg" name="https://surayt.bethmardutho.org/" abbrev="surayt-corpus" version="0.17" spec="1.0">
     <title>surayt</title>
     <!-- eXist shared resources -->
     <dependency package="http://exist-db.org/apps/shared"/>
