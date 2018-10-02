@@ -77,7 +77,7 @@ declare function app:display-nodes($node as node(), $model as map(*), $paths as 
     let $data := $model("data")
     return 
         if($paths != '') then 
-            global:tei2html(
+            global:tei2html((
                     for $p in tokenize($paths,',')
                     return util:eval(concat('$data',$p)))
         else global:tei2html($model("data")/descendant::tei:body)
