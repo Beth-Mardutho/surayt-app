@@ -60,8 +60,13 @@ declare function app:display-rec($node as node(), $model as map(*), $collection 
  : Used by templating module, not needed if full record is being displayed 
 :)
 declare function app:h1($node as node(), $model as map(*)){
- global:tei2html(<srophe-title xmlns="http://www.tei-c.org/ns/1.0">{($model("data")/descendant::tei:titleStmt[1]/tei:title[1], $model("data")/descendant::tei:idno[1])}</srophe-title>)
-}; 
+    let $title := tei2html:tei2html($model("data")/descendant::tei:titleStmt/tei:title[1])
+    let $author := tei2html:tei2html($model("data")/descendant::tei:titleStmt/tei:author[not(@role='anonymous')])
+    return   
+        <div class="title">{if($title/@xml:lang) then attribute lang { string($title/@xml:lang) } else ()}
+            <h1>{$title}</h1>
+        </div>
+};
 
 (:~  
  : Display any TEI nodes passed to the function via the paths parameter
