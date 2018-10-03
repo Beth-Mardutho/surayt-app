@@ -44,6 +44,85 @@ if(request:get-parameter('id', '') != '') then
 else map {"data" := <div>'Page data'</div>}    
 };
 
+
+(:~ 
+ : Data formats and sharing
+ : to replace app-link
+ :)
+declare %templates:wrap function app:other-data-formats($node as node(), $model as map(*), $formats as xs:string?){
+let $id := replace($model("data")/descendant::tei:idno[contains(., $global:base-uri)][1],'/tei','')
+return 
+    if($formats) then
+        <div class="container" style="width:100%;clear:both;margin-bottom:1em; text-align:right;">
+            {
+                for $f in tokenize($formats,',')
+                return 
+                    if($f = 'tei') then
+                        (<a href="{concat(replace($id,$global:base-uri,$global:nav-base),'.tei')}" class="btn btn-default btn-xs" id="teiBtn" data-toggle="tooltip" title="Click to view the TEI XML data for this record." >
+                             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> TEI
+                        </a>, '&#160;')
+                    else if($f = 'print') then                        
+                        (<a href="javascript:window.print();" type="button" class="btn btn-default btn-xs" id="teiBtn" data-toggle="tooltip" title="Click to send this page to the printer." >
+                             <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                        </a>, '&#160;')  
+                    else if($f = 'rdf') then
+                        (<a href="{concat(replace($id,$global:base-uri,$global:nav-base),'.rdf')}" class="btn btn-default btn-xs" id="teiBtn" data-toggle="tooltip" title="Click to view the RDF-XML data for this record." >
+                             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> RDF/XML
+                        </a>, '&#160;')
+                    else if($f = 'ttl') then
+                        (<a href="{concat(replace($id,$global:base-uri,$global:nav-base),'.ttl')}" class="btn btn-default btn-xs" id="teiBtn" data-toggle="tooltip" title="Click to view the RDF-Turtle data for this record." >
+                             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> RDF/TTL
+                        </a>, '&#160;')
+                    else if($f = 'geojson') then
+                        if($model("data")/descendant::tei:location/tei:geo) then 
+                        (<a href="{concat(replace($id,$global:base-uri,$global:nav-base),'.geojson')}" class="btn btn-default btn-xs" id="teiBtn" data-toggle="tooltip" title="Click to view the GeoJSON data for this record." >
+                             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> GeoJSON
+                        </a>, '&#160;')
+                        else()
+                    else if($f = 'kml') then
+                        if($model("data")/descendant::tei:location/tei:geo) then
+                            (<a href="{concat(replace($id,$global:base-uri,$global:nav-base),'.kml')}" class="btn btn-default btn-xs" id="teiBtn" data-toggle="tooltip" title="Click to view the KML data for this record." >
+                             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> KML
+                            </a>, '&#160;')
+                         else() 
+                    else if($f = 'corrections') then
+                        (<a class="btn btn-default btn-xs" data-toggle="modal" data-target="#feedback"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span> Corrections?</a>,'&#160;') 
+                    else if($f = 'copy') then
+                        (
+                        <a class="btn btn-default btn-xs" id="copyBtn" 
+                        data-toggle="tooltip" 
+                        title="To preserve right-to-left text, paste with options 'unformatted text' or 'keep text only.'"
+                        data-clipboard-action="copy">
+                        <span class="glyphicon glyphicon-copy" aria-hidden="true"></span> Copy</a>,'&#160;',
+                        <script>
+                           <![CDATA[
+                                var fullText;
+                                $(document).ready(function() {
+                                    $.get(']]>{concat(replace($id,$global:base-uri,$global:nav-base),'.txt')}<![CDATA[', $(this).serialize(), function(data) {
+                                        fullText = data;
+                                       }).fail( function(jqXHR, textStatus, errorThrown) {
+                                         console.log(textStatus);
+                                    });
+                                    new Clipboard('#copyBtn', {
+                                    text: function(trigger) {
+                                      return fullText
+                                    }
+                                     });
+                                });                           
+                            ]]>
+                        </script>
+                        )
+                   else if($f = 'text') then
+                            (<a href="{concat(replace($id,$global:base-uri,$global:nav-base),'.txt')}" class="btn btn-default btn-xs" id="txtBtn" data-toggle="tooltip" title="Click to view the plain text version of this data." >
+                             <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Text
+                            </a>, '&#160;')
+                    else () 
+                
+            }
+            <br/>
+        </div>
+    else ()
+};
 (:~   
  : Default record display. Runs full TEI record through global:tei2html($data/child::*) for HTML display 
  : For more complicated displays page can be configured using eXistdb templates. See a persons or place html page.
@@ -77,7 +156,7 @@ declare function app:display-nodes($node as node(), $model as map(*), $paths as 
     let $data := $model("data")
     return 
         if($paths != '') then 
-            global:tei2html((
+            global:tei2html(
                     for $p in tokenize($paths,',')
                     return util:eval(concat('$data',$p)))
         else global:tei2html($model("data")/descendant::tei:body)

@@ -19,18 +19,6 @@ declare variable $exist:collection-uris  :=
     return concat('/',$short-path,'/'))    
 ; 
 
-(: Used to test vars
-<div>
-    <p>$exist:path: {$exist:path}</p>
-    <p>$exist:resource: {$exist:resource}</p>
-    <p>$exist:controller: {$exist:controller}</p>
-    <p>$exist:prefix: {$exist:prefix}</p>
-    <p>$exist:root: {$exist:root}</p>
-    <p>Srophe record uris: {$exist:record-uris}</p>
-    <p>Srophe coleection uris: {$exist:collection-uris}</p>
-</div>
-:)
-
 
 if ($exist:path eq '') then
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
@@ -63,7 +51,7 @@ else if(replace($exist:path, $exist:resource,'') =  ($exist:record-uris) or ends
             else $exist:path
         return 
             <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-                <forward url="{concat('/restxq/syriac-corpus', $path)}" absolute="yes"/>
+                <forward url="{concat('/restxq/e-surayt/', $path)}" absolute="yes"/>
             </dispatch>
     (: Special handling for collections with app-root that matches record-URI-pattern sends html pages to html, others are assumed to be records :)
     else if($exist:resource = ('index.html','search.html','browse.html','about.html','record.html')) then 
@@ -110,11 +98,11 @@ else if (contains($exist:path,'/api/')) then
     </dispatch>
     else if($exist:resource = 'oai') then
      <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{replace($exist:path,'/api/oai','/srophe/modules/oai.xql')}"/>
+        <forward url="{replace($exist:path,'/api/oai','/e-surayt/modules/oai.xql')}"/>
      </dispatch>
     else
     <dispatch xmlns="http://exist.sourceforge.net/NS/exist">
-        <forward url="{concat('/restxq/syriac-corpus', $exist:path)}" absolute="yes"/>
+        <forward url="{concat('/restxq/e-surayt/', $exist:path)}" absolute="yes"/>
     </dispatch>
 
 else if ($exist:resource eq '' or ends-with($exist:path,"/")) then 
