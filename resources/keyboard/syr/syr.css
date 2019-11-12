@@ -1,7 +1,7 @@
 /* Syriaca.org keyboard css customizations */
 /* keyboard classes: ui-keyboard ui-widget-content ui-widget ui-corner-all ui-helper-clearfix ui-keyboard-has-focus */
 
- .ui-keyboard{
+.ui-keyboard{
   /* display:block;
     border:1px solid red;
     background:rgb(34, 34, 34);
@@ -16,6 +16,6 @@
     z-index: 99000;
     */  
 }
-.ui-keyboard span {font-size: .95em; font-weight:normal; font-family: "SertoJerusalem", "Serto Jerusalem", Verdana, Arial, Helvetica, sans-serif;}
+.ui-keyboard span {font-size: .95em; font-weight:normal}
 /*.ui-keyboard-button { height: 2em; width: 2em; margin: .1em; cursor: pointer; }*/
 .ui-keyboard-button{margin:0;}

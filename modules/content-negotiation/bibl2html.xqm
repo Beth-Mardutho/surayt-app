@@ -3,14 +3,15 @@ xquery version "3.0";
  : Builds tei conversions. Citation module. 
  :)
  
-module namespace bibl2html="http://syriaca.org/bibl2html";
-import module namespace tei2html="http://syriaca.org/tei2html" at "tei2html.xqm";
-import module namespace global="http://syriaca.org/global" at "../lib/global.xqm";
+module namespace bibl2html="http://syriaca.org/srophe/bibl2html";
+import module namespace tei2html="http://syriaca.org/srophe/tei2html" at "tei2html.xqm";
+import module namespace config="http://syriaca.org/srophe/config" at "../config.xqm";
 
 declare namespace html="http://purl.org/dc/elements/1.1/";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace xlink = "http://www.w3.org/1999/xlink";
 declare namespace util="http://exist-db.org/xquery/util";
+
 
 (:~
  : Select citation type based on child elements
@@ -18,21 +19,12 @@ declare namespace util="http://exist-db.org/xquery/util";
 declare function bibl2html:citation($nodes as node()*) {
     if($nodes/descendant-or-self::tei:teiHeader) then 
        bibl2html:record($nodes/descendant-or-self::tei:teiHeader)
-    else if($nodes/descendant-or-self::tei:monogr and not($nodes/descendant::tei:analytic)) then  
-       bibl2html:monograph($nodes/descendant-or-self::tei:monogr)
+    else if($nodes/descendant::tei:monogr and not($nodes/descendant::tei:analytic)) then 
+       bibl2html:monograph($nodes/descendant::tei:monogr)
     else if($nodes/descendant::tei:analytic) then 
-       bibl2html:analytic($nodes/descendant-or-self::tei:analytic)
+       bibl2html:analytic($nodes/descendant::tei:analytic)
     else bibl2html:record($nodes/descendant-or-self::tei:teiHeader)
 };
-
-declare function bibl2html:msDesc($nodes) {
-   (if($nodes/tei:settlement) then concat($nodes/tei:settlement,', ') else (),
-    if($nodes/tei:repository) then concat($nodes/tei:repository,
-        if($nodes/tei:repository/following-sibling::tei:idno[@type='shelfmark']) then ', ' else '') else (),
-    if($nodes/tei:idno[@type='shelfmark']) then $nodes/tei:idno[@type='shelfmark'] else ()
-    )            
-};
-
 
 (:~
  : Output monograph citation
@@ -91,27 +83,7 @@ declare function bibl2html:monograph($nodes as node()*) {
                         (bibl2html:emit-responsible-persons($nodes/tei:editor[not(@role) or @role!='translator'],3), 
                         if(count($nodes/tei:editor[not(@role) or @role!='translator']) gt 1) then ' eds., ' else ' ed., ')
                     else ()
-    return 
-        (if(deep-equal($nodes/tei:editor | 
-                $nodes/tei:author, 
-                $nodes/preceding-sibling::tei:monogr/tei:editor | 
-                $nodes/preceding-sibling::tei:monogr/tei:author )) then () else $persons,
-                tei2html:tei2html($nodes/tei:title[1]),' ',
-            normalize-space(string-join((if($nodes/tei:biblScope[@type='vol']) then
-                (' ',$nodes/tei:biblScope[@type='vol'])
-            else (),
-            if($nodes/tei:biblScope[@type='issue']) then
-                ('.',$nodes/tei:biblScope[@type='issue'],' ')
-            else (),
-            if($nodes/tei:imprint/tei:date[text() != '']) then
-               (' (',$nodes/tei:imprint/tei:date,')')
-            else (),':',
-            if($nodes/tei:biblScope[@type='pp']) then
-                (' ',$nodes/tei:biblScope[@type='pp'])
-            else (),
-            '.'),'')))
-    (:
-    (if(deep-equal($nodes/tei:editor | 
+    return (if(deep-equal($nodes/tei:editor | 
                 $nodes/tei:author, 
                 $nodes/preceding-sibling::tei:monogr/tei:editor | 
                 $nodes/preceding-sibling::tei:monogr/tei:author )) then () else $persons,tei2html:tei2html($nodes/tei:title[1]),
@@ -131,7 +103,6 @@ declare function bibl2html:monograph($nodes as node()*) {
                 concat(' (',tei2html:tei2html($nodes/tei:imprint[child::*[string-length(.) gt 0]]),')', 
                 if($nodes/following-sibling::tei:monogr) then ', ' else '.' )
             else())
-    :)            
 };
 
 (:~
@@ -139,9 +110,9 @@ declare function bibl2html:monograph($nodes as node()*) {
 :)
 declare function bibl2html:analytic($nodes as node()*) {
     let $persons := if($nodes/tei:author) then 
-                        concat(bibl2html:emit-responsible-persons($nodes/tei:author,10),', ')
+                        concat(bibl2html:emit-responsible-persons($nodes/tei:author,3),', ')
                     else if($nodes/tei:editor[not(@role) or @role!='translator']) then 
-                        (bibl2html:emit-responsible-persons($nodes/tei:editor[not(@role) or @role!='translator'],10), 
+                        (bibl2html:emit-responsible-persons($nodes/tei:editor[not(@role) or @role!='translator'],3), 
                         if(count($nodes/tei:editor[not(@role) or @role!='translator']) gt 1) then ' eds., ' else ' ed., ')
                     else 'No authors or Editors'
     return (
@@ -149,7 +120,7 @@ declare function bibl2html:analytic($nodes as node()*) {
             concat('"',tei2html:tei2html($nodes/tei:title[1]),if(not(ends-with($nodes/tei:title[1][starts-with(@xml:lang,'en')][1],'.|:|,'))) then '.' else (),'"'),            
             if(count($nodes/tei:editor[@role='translator']) gt 0) then (bibl2html:emit-responsible-persons($nodes/tei:editor[@role!='translator'],3),', trans. ') else (),
             if($nodes/following-sibling::tei:monogr/tei:title[1][@level='m']) then 'in' else(),
-            if($nodes/following-sibling::tei:monogr) then (' ',bibl2html:monograph($nodes/following-sibling::tei:monogr)) else()
+            if($nodes/following-sibling::tei:monogr) then bibl2html:monograph($nodes/following-sibling::tei:monogr) else()
         )
 };
 
@@ -177,19 +148,19 @@ declare function bibl2html:series($nodes as node()*) {(
 :)
 declare function bibl2html:emit-responsible-persons($nodes as node()*, $num as xs:integer?) {
     let $persons := 
+        let $limit := if($num) then $num else 3
         let $count := count($nodes)
-        let $limit := if($num and $num lt $count) then $num else $count
         return 
             if($count = 1) then 
                 bibl2html:person($nodes)                
             else if($count = 2) then
                 (bibl2html:person($nodes[1]),' and ',bibl2html:person($nodes[2]))            
             else 
-                for $n at $p in subsequence($nodes, 1, $limit)
+                for $n at $p in subsequence($nodes, 1, $num)
                 return 
-                    if($p = ($limit - 1)) then 
+                    if($p = ($num - 1)) then 
                         (normalize-space(bibl2html:person($n)), ' and ')
-                    else if($p = $limit) then 
+                    else if($p = $num) then 
                         concat(normalize-space(bibl2html:person($n)),' ')
                     else concat(normalize-space(bibl2html:person($n)),', ')
     return replace(string-join($persons),'\s+$','')                    
@@ -199,7 +170,5 @@ declare function bibl2html:emit-responsible-persons($nodes as node()*, $num as x
  : Output authors/editors child elements. 
 :)
 declare function bibl2html:person($nodes as node()*) {
-    if($nodes[@role='anonymous']) then () 
-    else if($nodes/tei:name) then string-join($nodes/tei:name,' ')
-    else string-join($nodes,' ')
+    if($nodes[@role='anonymous']) then () else string-join($nodes/descendant::text(),' ')
 };

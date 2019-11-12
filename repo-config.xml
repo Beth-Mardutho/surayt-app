@@ -18,6 +18,7 @@
         <data-root>e-surayt-data</data-root>
         <!-- Base URI for identifiers in app data -->
         <base_uri>https://surayt.bethmardutho.org</base_uri>
+        <html-render type="xslt"/>
         <!-- Map rendering -->
         <maps>
             <option>google</option>

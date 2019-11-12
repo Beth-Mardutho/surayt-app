@@ -1,11 +1,8 @@
 /* Application styles could go here */
 /**
  * Colors: 
- * Dark green: 4E6D59
+ * Blue: 456889
  */
-/* Import Fonts CSS */ 
-
-@import url("syr-font-families.css");
 
 /* Dev only: corner ribbon */
 /* The ribbons */
@@ -84,8 +81,8 @@ footer{background-color:#444;}
 .navbar {border-bottom:4px solid #4E6D59 !important;}
 .navbar-inner {border-bottom:.5em solid #4E6D59 !important;}
 .navbar-inner .container{height: 45px !important; padding-top:.5em; margin-left:.5em;}
-.navbar-brand {margin-top:-.75em; padding-left:0; margin-left:0; margin-right:-2em;}
-.navbar-brand img {padding:0; margin-top: -.25em; margin-left: 1em; margin-right:0;}
+.navbar-brand {margin-right:-1em;}
+.navbar-brand img {padding:0; margin-top: -.25em; margin-left: 0em; margin-right:0;}
 
 .brand {margin-top:-.75em; margin-left:40px;padding-left:0;}
 .brand img {margin-left:1.5em;padding-left:0;}
@@ -145,7 +142,7 @@ footer{background-color:#444;}
 .icon-text {display:inline-block; margin-top:-.85em; vertical-align: middle;}
 .nav-text {display:inline-block; line-height:1.5em; margin-top:.25em;}
 
-.banner-container {display:inline-block; line-height:2.5em;}
+.banner-container {display:inline-block;}
 .banner-icon {font-size:2.5em; display:inline-block; padding-top:0;}
 
  * /*
@@ -158,7 +155,7 @@ footer{background-color:#444;}
     position:relative;
     margin-top:0;
     padding-top:0;
-	background-image:url('../img/resafa_arch.jpg');
+	background-image:url('../images/resafa_arch.jpg');
 	background-size:cover;
 	background-position:center;
 	height:200px;
@@ -182,7 +179,7 @@ footer{background-color:#444;}
     position:relative;
     padding-top:0;
     border-bottom:4px solid #4E6D59;
-	background-image:url('../img/banner.png');
+	background-image:url('../images/banner.png');
 	background-size:cover;
 	background-position:center;
 	height:250px;
@@ -214,7 +211,7 @@ footer {text-align:center; color:white;}
 
 /* Simple background color styles */
 .grey {background-color:#eee;}
-.grey-dark {background-color:#ccc;}
+.grey-dark {background-color:#ccc; margin-top:-1em; margin-bottom:-1em;}
 .white {background-color:white;}
 
 /* Block styles */
@@ -238,7 +235,7 @@ h4 {font-size: 1em; margin:0 0 .25em 0; padding-bottom:0; font-weight:bold;}
 h3.label {
     background-color:#ccc;
     line-height: 1.2em;
-    font-size: 2em;
+    font-size: 1.25em;
     float:left;
 }
 h3.syr{
@@ -248,6 +245,9 @@ h3.syr{
 }
 
 h4 {font-size: 1em; margin-top:1em;}
+h5 {margin: 1em 0 0 0; font-weight:600;}
+
+.h5-inline {font-size: 1em; font-weight:600;}
 
 .hi {background-color:yellow;}
 
@@ -282,6 +282,8 @@ td {
     padding-left:.5em;
     padding-right:1.25em;
 }
+.panel-body {word-wrap: break-word;}
+.panel-body :lang(syr) {font-size:20px; }
 
 /* Lables */
 .get-syriac {font-size:.55em; margin-left:1em;vertical-align:super;font-weight:normal; color: rgb(0,136,204);display:none}
@@ -291,7 +293,10 @@ td {
 .sort-title {background-color:none; color:#666; font-weight:500; display:block; }
 .textBox {display:block;}
 .caveat, .note {font-size: .785em; font-style:italic; margin-top:-.5em; padding-top:0;}
-.title {border-bottom:2px solid #666666;margin-bottom:1em; margin-top:0;padding:0;}
+.title {display:block; margin-bottom:1em; border:none;}
+.title h1{border-bottom:2px solid #666666; margin-bottom:.5em; margin-top:0; padding:0 1em;}
+.title .uri{padding:0 1em; color: #999999;}
+.data-formats {margin-right:2em;}
 .about {padding-top: .5em; border-bottom:2px solid #666666;margin-bottom:1em;}
 .caption{text-align:center; font-size:.75em;color:grey;}
 .funding {margin:1em;}
@@ -324,12 +329,13 @@ td {
 }
 
 .browse-alpha li.syr-menu + li.syr-menu {
-    padding-left: .5em;
+    padding-left: .35em;
 }
+
 .browse-alpha li.ar-menu + li.ar-menu {
     padding-left: .15em;
 }
-
+.browse-author-name {font-weight:400; font-size:1.125em;}
 .nav-stacked > .active > a,
     .nav-stacked > .active > a:hover {
       color: #000;
@@ -417,13 +423,15 @@ td {
 .relation .results-list-desc.uri{margin-left:0; }
 
 /* footnote styles */
+.footnotes {display:block;border-top: 1px dotted gray; text-align:left;}
+.footnote-text {display:block;}
+.footnote-text .footnote-refs {font-size: .75em;}
 .footnote-refs, .footnote-tgt {
-    font-size: .7em;
+    font-size: .5em;
     line-height: 0.5em;
     vertical-align: baseline;
     position: relative;
     top: -0.4em;
-
 }
 .footnote-tgt {
     margin-left:-1.5em;
@@ -464,19 +472,21 @@ td {
 }
 
 :lang(syr),:lang(syc) {
-  font-family: "SertoJerusalem", "Serto Jerusalem", Verdana, Arial, Helvetica, sans-serif;
- /*font-family: "EstrangeloEdessa", "Estrangelo Edessa", Verdana, Arial, Helvetica, sans-serif;*/
+ font-family: "EstrangeloEdessa", "Estrangelo Edessa", Verdana, Arial, Helvetica, sans-serif;
   /*font-size:large;*/
   font-size:24px; 
   line-height:24px;
   text-align: right;
+  font-style: normal !important;
 }
+
 
 :lang(syr-Syrj), :lang(syc-Syrj) {
  font-family: "SertoBatnan", "Serto Batnan", Verdana, Arial, Helvetica, sans-serif;
   font-size:24px; 
   line-height:24px;
  text-align: right;
+ font-style: normal !important;
 }
 
 :lang(syr-Syre), :lang(syc-Syre) {
@@ -484,6 +494,7 @@ td {
   font-size:24px; 
   line-height:24px;
   text-align: right;
+  font-style: normal !important;
 }
 
 :lang(ar) {
@@ -491,6 +502,7 @@ td {
   font-size:24px; 
   line-height:24px;
  text-align: right;
+ font-style: normal !important;
 }
 
 
@@ -612,7 +624,7 @@ div[id|=place] > div:last-of-type {
 .page-bottom .hit-count {display:none;}
 
 .match {
-    font-style:italic; color:gray;
+   background-color:yellow; color:gray;
 }
 .param {font-weight:600; color:#666; padding-left:.5em;}
 
@@ -786,6 +798,7 @@ pre {
 .panel-heading a.collapsed:after {
     content:"\e080";
 }
+
 #dashboardOne h4.panel-title {color:#666; font-weight:500; font-size:1.25em;}
 
 
@@ -811,6 +824,12 @@ pre {
 
 /* Corpus Styles */
 /* Corpus text sections styles */
+.tei-text h3 {text-align:center; margin:1em; }
+.tei-front {margin-bottom: 3em; padding-bottom:1em; border-bottom:1px dotted grey;}
+.tei-front .tei-title {text-align:center;}
+.tei-front .tei-author {display:block; font-size: 1em;}
+.tei-front .tei-date {display:block; font-size: 1em;}
+.tei-front .tei-preface h3 {display:block; text-align:center;  margin:1em; } 
 .tei-head.display {display:block; color:red;}
 .tei-section.display {display:block;}
 .tei-div {display:block; margin:1em 0;}
@@ -840,7 +859,9 @@ pre {
     border-radius: 1;
     */
     }
-.text-number.display {display:inline;}
+.tei-footnote {display:none; font-size:x-small;}    
+.tei-footnote.display {display:inline;}   
+/*.text-number.display {display:inline;}*/
 
 /* Table of Contents */
 .toc {display:block; margin-left:.75em;}
@@ -858,12 +879,32 @@ pre {
 }
 
 /* Sedra display */
-#sedraDisplay {
+#sedraDisplay, #footnoteDisplay {
     display:none; 
     position: fixed; 
     width:24%; 
-    min-height:150px; 
+    min-height:250px; 
     max-height:400px; 
+    top:125px;
+    box-shadow: 8px 8px 3px #999;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    z-index: 125;
+} 
+#footnoteDisplay {
+    display:none; 
+    position: fixed;
+    padding: 0 1em;
+    /*width:24%; 
+    min-height:150px;*/ 
+/*    max-height:150px;*/
+    min-height: 25px;
+    min-width: 25px;
+    background-color:white;
+    border:1px solid #ccc;
     top:125px;
     box-shadow: 8px 8px 3px #999;
     -webkit-border-radius: 10px;
@@ -954,3 +995,38 @@ div.toggle-buttons .toggle-label {font-size: 1em; font-weight:600}
     }
 .caret {float:left; margin-left:.5em; margin-top:.5em;}    
 }
+
+/* Date slider options*/
+h4.slider {margin-bottom:2.5em;}
+.sliderContainer {margin-left:1.5em;}
+.ui-rangeSlider-label {
+  background-image:none !important;
+  background-color: rgb(81,122,95, .75);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  color:white;
+  font-size:.95em;
+  font-weight:500;
+  position: relative;
+  width: 45px;
+  bottom: 20px;
+  text-align: center;
+  padding: 3px 3px 3px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  border-radius: 25px;
+  margin-bottom:9px !important;
+}
+
+.ui-rangeSlider-label::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: calc(50% - 5px);
+  background-color: rgb(81,122,95, .75);
+  width: 8px;
+  height: 8px;
+  
+  /* The points are: (left top: x y, right top: x y, center bottom: x y) */
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+

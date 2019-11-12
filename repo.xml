@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <meta xmlns="http://exist-db.org/xquery/repo">
     <description>Surayt Corpus</description>
-    <author/>
-    <website>https://surayt.bethmardutho.org/</website>
+    <author>Winona Salesky</author>
+    <website></website>
     <status>beta</status>
     <license>GNU-LGPL</license>
     <copyright>true</copyright>
@@ -9,6 +10,5 @@
     <target>e-surayt</target>
     <prepare>pre-install.xql</prepare>
     <finish>post-install.xql</finish>
-    
-<deployed>2018-03-27T15:57:30.477-04:00</deployed>
+    <deployed>2017-05-15T08:52:37.648-04:00</deployed>
 </meta>
