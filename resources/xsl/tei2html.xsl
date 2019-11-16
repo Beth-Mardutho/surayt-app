@@ -300,10 +300,15 @@
                 <div class="section" style="display:block;">
                     <xsl:choose>
                         <xsl:when test="descendant-or-self::t:div[@type='transcription']">
+                            <div class="transcription">
+                                <xsl:apply-templates select="descendant-or-self::t:div[@type='transcription']" mode="transcription"/>                                
+                            </div>
+                            <!--
                             <div class="row">
                                 <div class="col-md-6"><xsl:apply-templates select="descendant-or-self::t:div[@type='transcription']"/></div>
                                 <div class="col-md-6"><xsl:apply-templates select="descendant-or-self::t:div[@type='surayt']"/></div>
                             </div>
+                            -->
                         </xsl:when>
                         <xsl:otherwise>
                             <xsl:apply-templates/>                            
@@ -356,6 +361,12 @@
     </xsl:template>
     
     <!-- D -->
+    <xsl:template match="t:div" mode="transcription">
+        <div class="row">
+            <div class="col-md-6"><xsl:apply-templates select="descendant-or-self::t:div[@type='transcription']"/></div>
+            <div class="col-md-6"><xsl:apply-templates select="descendant-or-self::t:div[@type='surayt']"/></div>
+        </div>
+    </xsl:template>
     <xsl:template match="t:div | t:div1 | t:div2 | t:div3 | t:div4 | t:div5">
         <xsl:param name="parentID"/>
         <xsl:variable name="currentid" select="concat(if($parentID != '') then $parentID else 'id','.',@n)"/>

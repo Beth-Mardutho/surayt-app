@@ -2,7 +2,7 @@
 <meta xmlns="http://exist-db.org/xquery/repo">
     <description>Surayt Corpus</description>
     <author>Winona Salesky</author>
-    <website></website>
+    <website>https://surayt.bethmardutho.org</website>
     <status>beta</status>
     <license>GNU-LGPL</license>
     <copyright>true</copyright>

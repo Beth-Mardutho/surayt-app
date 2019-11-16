@@ -128,7 +128,7 @@ img{ margin:0px }
   
 }
 
-:lang(syr-Syrj), :lang(syc-Syrj) {
+:lang(syr-Syrj), :lang(syc-Syrj), :lang(tru) {
  font-family: "SertoBatnan", "Serto Batnan", Verdana, Arial, Helvetica, sans-serif;
   font-size:1.25em; 
   line-height:1em;

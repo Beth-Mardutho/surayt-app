@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package xmlns="http://expath.org/ns/pkg" name="http://syriac-corpus.org/syriac-corpus" abbrev="e-surayt" version="0.21" spec="1.0">
+<package xmlns="http://expath.org/ns/pkg" name="https://surayt.bethmardutho.org" abbrev="e-surayt" version="0.21" spec="1.0">
     <title>Surayt Corpus</title>
 </package>
