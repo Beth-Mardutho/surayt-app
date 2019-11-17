@@ -35,7 +35,7 @@ declare variable $browse:perpage {for $r in request:get-parameter('perpage', 10)
  : @param $element element used to filter browse results, passed from html
  : @param $facets facet xml file name, relative to collection directory
 :)  
-declare function browse:get-all($node as node(), $model as map(*), $collection as xs:string*, $element as xs:string?, $facets as xs:string?){
+declare function browse:get-all($node as node(), $model as map(*), $collection as xs:string*, $element as xs:string?, $facets as xs:string?,$sort-options as xs:string*){
     let $hits := 
         if($browse:view = 'title') then
             data:get-records($collection, 'tei:titleStmt/tei:title[1]')
@@ -54,7 +54,7 @@ declare function browse:show-hits($node as node(), $model as map(*), $collection
         let $hits := $model("hits")
         return 
             <div class="col-md-12 map-lg">{browse:get-map($hits)}</div>
-   else if($browse:view = 'title' or  $browse:lang = 'syr') then
+   else 
        let $hits := $model("hits")
        let $facet-config := global:facet-definition-file($collection)
        return
@@ -89,63 +89,6 @@ declare function browse:show-hits($node as node(), $model as map(*), $collection
                         </div>
                     </div>
                 </div>
-   else 
-    let $authors := $model("group-by-authors")
-    let $hits := $model("hits")
-    return
-        <div>
-            {(
-                if(($browse:lang = 'syr') or ($browse:lang = 'ar')) then (attribute dir {"rtl"}) else(),
-                    <div class="float-container">
-                         <div class="{if(($browse:lang = 'syr') or ($browse:lang = 'ar')) then "pull-left" else "pull-right"}">
-                             <div>{page:pages($hits, $collection, $browse:start, $browse:perpage,'', $sort-options)}</div>
-                         </div>{browse:browse-abc-menu()}
-                    </div>,
-                    <div class="row">
-                    <div class="col-md-1 text-center"><h3 class="label">{(if($browse:alpha-filter != '') then $browse:alpha-filter else 'ALL')}</h3></div>
-                    <div class="col-md-11" style="margin-top:1em;">
-                        {                 
-                         for $author at $p in subsequence($authors, $browse:start,$browse:perpage)
-                         let $name := string($author/@name)
-                         let $works := $hits[descendant::tei:titleStmt//tei:author[normalize-space() = $name]]
-                         let $count-works := count($works)
-                         where $count-works gt 0
-                         return 
-                            if(request:get-parameter('author-exact', '')) then
-                                <div xmlns="http://www.w3.org/1999/xhtml" style="margin:.71em 0; border-bottom:1px dotted #eee; padding:.25em 0;" class="short-rec-result">
-                                    <a class="togglelink text-info"  
-                                    data-toggle="collapse" data-target="#show{replace($name,'\s|,|\.|\[|\]|\(|\)|\-|\?','')}" 
-                                    href="#show{replace($name,'\s|,|\.|\[|\]|\(|\)|\-|\?','')}" data-text-swap=" - "> + </a>&#160; 
-                                    <span class="browse-author-name">{string($name)}</span> ({$count-works} works)
-                                    <div class="indent collapse in" style="background-color:#F7F7F9;" id="show{replace($name,'\s|,|\.|\[|\]|\(|\)|\-|\?','')}">{
-                                         for $r in $works
-                                         let $id := replace($r/descendant::tei:idno[1],'/tei','')
-                                         return 
-                                            <div class="indent" style="border-bottom:1px dotted #eee; padding:1em">{tei2html:summary-view($r, '', $id)}</div>
-                                    }</div>
-                                </div>
-                            else 
-                            <div xmlns="http://www.w3.org/1999/xhtml" style="margin:.71em 0; border-bottom:1px dotted #eee; padding:.25em 0;" class="short-rec-result">
-                                <a class="togglelink text-info"  
-                                data-toggle="collapse" data-target="#show{replace($name,'\s|,|\.|\[|\]|\(|\)|\-|\?','')}" 
-                                href="#show{replace($name,'\s|,|\.|\[|\]|\(|\)|\-|\?','')}" data-text-swap=" - "> + </a>&#160; 
-                                <span class="browse-author-name">{string($name)}</span> ({$count-works} works)
-                                <div class="indent collapse" style="background-color:#F7F7F9;" id="show{replace($name,'\s|,|\.|\[|\]|\(|\)|\-|\?','')}">{
-                                    (for $r in subsequence($works, 1,5)
-                                    let $id := replace($r/descendant::tei:idno[1],'/tei','')
-                                    return 
-                                        <div class="indent" style="border-bottom:1px dotted #eee; padding:1em">{tei2html:summary-view($r, '', $id)}</div>,
-                                    if($count-works gt 20) then
-                                        <div class="indent"><a href="browse.html?author-exact={string($name)}">Show all works</a></div>
-                                    else ()
-                                        )
-                                }</div>
-                            </div>
-                         }
-                    </div>
-                    </div>
-                 )}
-        </div>
 };
 
 (:

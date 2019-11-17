@@ -362,10 +362,33 @@
     
     <!-- D -->
     <xsl:template match="t:div" mode="transcription">
+        <xsl:for-each select="descendant::t:anchor">
+            <xsl:variable name="anchorID" select="@xml:id"/>
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- -->
+                    <!--<anchor xml:id="test.syr.1" corresp="test.latn.1"/>-->
+                    <!--<head><xsl:value-of select="@xml:id"/></head>-->
+                    <xsl:for-each select="parent::*[1]">
+                        <xsl:apply-templates select="."/>
+                    </xsl:for-each>
+                </div>
+                <div class="col-md-6">
+                    <xsl:for-each select="//t:anchor[@corresp = $anchorID]">
+                        <!--<head><xsl:value-of select="@xml:id"/></head>-->
+                        <xsl:for-each select="parent::*[1]">
+                            <xsl:apply-templates select="."/>
+                        </xsl:for-each>
+                    </xsl:for-each>
+                </div>
+            </div>
+        </xsl:for-each>
+        <!--
         <div class="row">
             <div class="col-md-6"><xsl:apply-templates select="descendant-or-self::t:div[@type='transcription']"/></div>
             <div class="col-md-6"><xsl:apply-templates select="descendant-or-self::t:div[@type='surayt']"/></div>
         </div>
+        -->
     </xsl:template>
     <xsl:template match="t:div | t:div1 | t:div2 | t:div3 | t:div4 | t:div5">
         <xsl:param name="parentID"/>
