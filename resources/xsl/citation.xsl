@@ -34,9 +34,7 @@
         </xsl:if>
         
         <!-- title of the entry -->
-        <xsl:text>“</xsl:text>
-            <xsl:apply-templates select="t:title[@level='a'][1]" mode="footnote"/>
-        <xsl:text>”</xsl:text>
+        <xsl:text>“</xsl:text><xsl:apply-templates select="t:title[1]"/><xsl:text>”</xsl:text>
         
         <!-- monographic title 
         <xsl:text> in </xsl:text>
