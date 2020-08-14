@@ -1316,18 +1316,19 @@
             <div class="panel-heading">How to Cite this Electronic Edition</div>
             <div class="panel-body">
                 <div id="citation-note">
-                    <h5>Note:</h5>
+                    <!--<h5>Note:</h5>-->
                     <xsl:apply-templates select="//t:teiHeader/t:fileDesc/t:titleStmt" mode="cite-foot"/>
+                    <!--
                     <div class="collapse" id="showFullCitation">
                         <div id="citation-bibliography">
                             <h5>Bibliography:</h5>
                             <xsl:apply-templates select="//t:teiHeader/t:fileDesc/t:titleStmt" mode="cite-biblist"/>
-                        </div>
-                        <!-- <xsl:call-template name="aboutEntry"/>-->                        
+                        </div>                        
                     </div>
                     <br/>
                     <a href="#" class="btn-sm btn-info togglelink pull-right" data-toggle="collapse" data-target="#showFullCitation" data-text-swap="Hide Citation Styles" style="margin-top:1em;">Show Citation Styles <i class="glyphicon glyphicon-circle-arrow-right"/>
                     </a>
+                    -->
                 </div>
             </div>
         </div>
