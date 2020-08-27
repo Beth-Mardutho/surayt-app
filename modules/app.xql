@@ -605,6 +605,7 @@ declare function app:display-ids($node as node(), $model as map(*)){
                     return <span><a href="{string($r/@ref)}">{string($r/@ref)}</a><br/></span>}
                 </div>
               else(), 
+              if($model("hits")/descendant::tei:sourceDesc/descendant::tei:idno[starts-with(., 'http://syriaca.org/bibl')]) then
               <div>
                 <h5>Source: </h5>
                 {global:tei2html($model("hits")/descendant::tei:sourceDesc)}
@@ -619,19 +620,24 @@ declare function app:display-ids($node as node(), $model as map(*)){
                         </span>
                     </span>
                 else()}
-              </div>, 
+              </div>
+              else(), 
+              if($model("hits")/descendant::tei:text/@type != '') then 
               <div style="margin-top:1em;">
                 <span class="h5-inline">Type of Text: 
                 </span>
                 <span>{functx:capitalize-first(functx:camel-case-to-words(string($model("hits")/descendant::tei:text/@type),' '))}</span>
                  &#160;<a href="{$config:nav-base}/documentation/wiki.html?wiki-page=/Types-of-Text-in-the-Digital-Syriac-Corpus&amp;wiki-uri=https://github.com/srophe/syriac-corpus/wiki"><span class="glyphicon glyphicon-question-sign text-info moreInfo"></span></a>
-              </div>,
+              </div>
+              else(),
+              if($model("hits")/descendant::tei:revisionDesc/@status != '') then 
               <div style="margin-top:1em;">
                 <span class="h5-inline">Status: 
             </span>
                 <span>{functx:capitalize-first(functx:camel-case-to-words(string($model("hits")/descendant::tei:revisionDesc/@status),' '))}</span>
               &#160;<a href="{$config:nav-base}/documentation/wiki.html?wiki-page=/Status-of-Texts-in-the-Digital-Syriac-Corpus&amp;wiki-uri=https://github.com/srophe/syriac-corpus/wiki"><span class="glyphicon glyphicon-question-sign text-info moreInfo"></span></a>
-              </div>,
+              </div>
+              else(),
               <div style="margin-top:1em;">
                 <span class="h5-inline">Publication Date: </span>
                 {format-date(xs:date($model("hits")/descendant::tei:revisionDesc/tei:change[1]/@when), '[MNn] [D], [Y]')}
