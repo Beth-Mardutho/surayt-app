@@ -644,30 +644,36 @@ declare function app:display-ids($node as node(), $model as map(*)){
               </div>, 
               <div>
                 <h5>Preparation of Electronic Edition:</h5>
-                TEI XML encoding by {$model("hits")//tei:titleStmt/descendant::tei:respStmt[tei:resp[. = 'TEI XML encoding by']]/tei:name/text()}. <br/>
-                Syriac text transcribed by {$model("hits")//tei:titleStmt/descendant::tei:respStmt[tei:resp[. = 'Syriac text transcribed by']]/tei:name/text()}.
+                {if($model("hits")//tei:titleStmt/descendant::tei:respStmt[tei:resp[. = 'TEI XML encoding by']]/tei:name/text() != '') then
+                    <p>TEI XML encoding by {$model("hits")//tei:titleStmt/descendant::tei:respStmt[tei:resp[. = 'TEI XML encoding by']]/tei:name/text()}.</p>                    
+                 else ()}
+                {if($model("hits")//tei:titleStmt/descendant::tei:respStmt[tei:resp[. = 'Syriac text transcribed by']]/tei:name/text() != '') then
+                    <p>Syriac text transcribed by {$model("hits")//tei:titleStmt/descendant::tei:respStmt[tei:resp[. = 'Syriac text transcribed by']]/tei:name/text()}.</p>
+                else ()
+                }
               </div>,
-              <div>
-                <h5>Open Access and Copyright:</h5>
-                <div class="small">
-                    {(
-                    $model("hits")/descendant::tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:availability/tei:ab[1]/tei:note[1]/text(),
-                    <div id="showMoreAccess" class="collapse">
-                        {(
-                        $model("hits")/descendant::tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:availability/tei:ab[2]/tei:note[1]/text(),
-                        if($model("hits")/descendant::tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:availability/tei:licence[contains(@target, 'http://creativecommons.org/licenses/')]) then 
-                            <p>
-                            <a rel="license" href="{string($model("hits")/descendant::tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:availability/tei:licence/@target)}">
-                                <img alt="Creative Commons License" style="border-width:0;display:inline;" src="{$config:nav-base}/resources/images/cc.png" height="18px"/>
-                            </a>
-                            </p>
-                        else())}                   
-                    </div>,
-                    '&#160;',<a href="#" class="togglelink" data-toggle="collapse" data-target="#showMoreAccess" data-text-swap="Hide details">See details...</a>
-                    )}
+              if($model("hits")/descendant::tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:availability/tei:ab[1]/tei:note[1]/text()) then 
+                <div>
+                  <h5>Open Access and Copyright:</h5>
+                  <div class="small">
+                      {(
+                      $model("hits")/descendant::tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:availability/tei:ab[1]/tei:note[1]/text(),
+                      <div id="showMoreAccess" class="collapse">
+                          {(
+                          $model("hits")/descendant::tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:availability/tei:ab[2]/tei:note[1]/text(),
+                          if($model("hits")/descendant::tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:availability/tei:licence[contains(@target, 'http://creativecommons.org/licenses/')]) then 
+                              <p>
+                              <a rel="license" href="{string($model("hits")/descendant::tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:availability/tei:licence/@target)}">
+                                  <img alt="Creative Commons License" style="border-width:0;display:inline;" src="{$config:nav-base}/resources/images/cc.png" height="18px"/>
+                              </a>
+                              </p>
+                          else())}                   
+                      </div>,
+                      '&#160;',<a href="#" class="togglelink" data-toggle="collapse" data-target="#showMoreAccess" data-text-swap="Hide details">See details...</a>
+                      )}
+                  </div>
                 </div>
-              </div>
-              
+              else()
              )}
         </div>
     </div>        
