@@ -644,7 +644,7 @@ declare function app:display-ids($node as node(), $model as map(*)){
               </div>, 
               <div>
                 <h5>Preparation of Electronic Edition:</h5>
-                TEI XML encoding by James E. Walters. <br/>
+                TEI XML encoding by {$model("hits")//tei:titleStmt/descendant::tei:respStmt[tei:resp[. = 'TEI XML encoding by']]/tei:name/text()}. <br/>
                 Syriac text transcribed by {$model("hits")//tei:titleStmt/descendant::tei:respStmt[tei:resp[. = 'Syriac text transcribed by']]/tei:name/text()}.
               </div>,
               <div>
