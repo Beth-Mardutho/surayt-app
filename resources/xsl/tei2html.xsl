@@ -334,10 +334,12 @@
             <div id="citation-note" class="well">
                 <xsl:apply-templates select="descendant-or-self::t:teiHeader/t:fileDesc/t:titleStmt" mode="cite-foot"/>
                 <div class="collapse" id="showcit">
+                    <!--
                     <div id="citation-bibliography">
                         <h4>Bibliography:</h4>
                         <xsl:apply-templates select="descendant-or-self::t:teiHeader/t:fileDesc/t:titleStmt" mode="cite-biblist"/>
                     </div>
+                    -->
                     <xsl:call-template name="aboutEntry"/>
                     <div id="license">
                         <h3>Copyright and License for Reuse</h3>
