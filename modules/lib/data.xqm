@@ -193,15 +193,26 @@ declare function data:get-records($collection as xs:string*, $element as xs:stri
         else if(request:get-parameter('alpha-filter', '') = ('ALL','all') or request:get-parameter('alpha-filter', '') = '') then 
             for $hit in $hits
             let $root := $hit/ancestor-or-self::tei:TEI
-            let $sort := global:build-sort-string($hit,request:get-parameter('lang', ''))
+            let $sortString := string-join($hit/text(),'')
+            let $sort := normalize-space(global:build-sort-string($sortString,request:get-parameter('lang', '')))
             let $id := $root/descendant::tei:publicationStmt/tei:idno[1]
             group by $facet-grp := $id
             order by $sort[1] collation 'http://www.w3.org/2013/collation/UCA'
             return <browse xmlns="http://www.tei-c.org/ns/1.0" sort="{string($sort[1])}">{$root[1]}</browse>              
+        else if(request:get-parameter('view', '') = ('title')) then 
+            for $hit in $hits
+            let $root := $hit/ancestor-or-self::tei:TEI
+            let $sortString := string-join($hit/text(),'')
+            let $sort := normalize-space(global:build-sort-string($sortString,request:get-parameter('lang', '')))
+            let $id := $root/descendant::tei:publicationStmt/tei:idno[1]
+            group by $facet-grp := $id
+            order by $sort[1] collation 'http://www.w3.org/2013/collation/UCA'
+            where matches($sort,global:get-alpha-filter())
+            return <browse xmlns="http://www.tei-c.org/ns/1.0" sort="{string($sort[1])}">{$root[1]}</browse>              
         else 
             for $hit in $hits
             let $root := $hit/ancestor-or-self::tei:TEI
-            let $sort := global:build-sort-string($hit,request:get-parameter('lang', ''))
+            let $sort := normalize-space(global:build-sort-string($hit,request:get-parameter('lang', '')))
             (:let $id := $root/descendant::tei:publicationStmt/tei:idno[1]
               group by $facet-grp := $id:)
             order by $sort collation 'http://www.w3.org/2013/collation/UCA'
