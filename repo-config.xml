@@ -1,7 +1,7 @@
 <meta xmlns="http://exist-db.org/xquery/repo">
     <config>
         <!-- App title -->
-        <title>Surayt Corpus</title>
+        <title>Šlomo Surayt Corpus</title>
         <!-- App description -->
         <description/>
         <!-- Contact email -->
@@ -36,7 +36,7 @@
             -->
         </keyboard-options>
         <collections>
-            <collection name="corpus" title="Surayt Corpus" app-root="/" data-root="/" record-URI-pattern="https://surayt.bethmardutho.org/"/>
+            <collection name="corpus" title="Šlomo Surayt Corpus" app-root="/" data-root="/" record-URI-pattern="https://surayt.bethmardutho.org/"/>
         </collections>
     </config>
 </meta>
