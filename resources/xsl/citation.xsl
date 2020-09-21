@@ -28,7 +28,7 @@
     <xsl:template match="t:titleStmt" mode="cite-foot">   
         <!-- creator(s) of the entry -->
         <!-- Process editors/authors using local function in helper-functions.xsl local:emit-responsible-persons -->
-        <xsl:sequence select="local:emit-responsible-persons(t:author[not(@role='anonymous')],'footnote',1)"/>
+        <xsl:sequence select="local:emit-responsible-persons(t:author[not(@role='anonymous')],'biblist',20)"/>
         <xsl:if test="t:author[not(@role='anonymous')]">
             <xsl:text>, </xsl:text>            
         </xsl:if>
@@ -85,12 +85,15 @@
         
         <!-- title of the entry -->
         <xsl:text>“</xsl:text>
-        <xsl:apply-templates select="t:title[@level='a'][1]" mode="biblist"/>
+        <xsl:apply-templates select="t:title[1]" mode="biblist"/>
         <xsl:text>.”</xsl:text>
         
         <!-- monographic title -->
-        <xsl:text> In </xsl:text>
-        <xsl:apply-templates select="../descendant::t:title[@level='m'][1]" mode="footnote"/>
+        <xsl:if test="../descendant::t:title[@level='m']">
+            <xsl:text> In </xsl:text>
+            <xsl:apply-templates select="../descendant::t:title[@level='m'][1]" mode="footnote"/>            
+        </xsl:if>
+
         
         <!-- general editors -->
         <xsl:text>, edited by </xsl:text>

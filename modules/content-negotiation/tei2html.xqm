@@ -77,6 +77,18 @@ declare function tei2html:tei2html($nodes as node()*) as item()* {
                             element a { attribute href { $node/@ref }, $name }
                         else $name                                 
                         }</span>
+            case element(tei:name) return 
+                <span class="tei-name">{
+                    let $name := if($node/child::*) then 
+                                    string-join(for $part in $node/child::*
+                                    order by $part/@sort ascending, string-join($part/descendant-or-self::text(),' ') descending
+                                    return tei2html:tei2html($part/node()),' ')
+                                 else tei2html:tei2html($node/node())
+                    return
+                        if($node/@ref) then
+                            element a { attribute href { $node/@ref }, $name }
+                        else $name                                 
+                        }</span>                        
             case element(tei:title) return 
                 let $titleType := 
                         if($node/@level='a') then 
