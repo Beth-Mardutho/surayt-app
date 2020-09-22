@@ -264,7 +264,7 @@ declare function facet:key($label, $value, $count, $facet-definition){
    let $active := if(contains($facet:fq,concat(';fq-',string($facet-definition/@name),':',string($value)))) then 'active' else ()    
    return 
         if($count gt 0) then 
-            <a href="?{$new-fq}{facet:url-params()}" class="facet-label btn btn-default {$active}">{lower-case(global:get-label(string($label)))} <span class="count"> ({string($count)})</span></a>
+            <a href="?{$new-fq}{facet:url-params()}" class="facet-label btn btn-default {$active}">{global:get-label(string($label))} <span class="count"> ({string($count)})</span></a>
         else ()        
 };
 
@@ -331,3 +331,66 @@ declare function facet:url-params(){
 (:~
  : Surayt functions
 :)
+declare function facet:titles($results as item()*, $facet-definition as element(facet:facet-definition)*) as element(facet:key)*{
+    let $path := concat('$results/',$facet-definition/facet:group-by/facet:sub-path/text())
+    let $sort := $facet-definition/facet:order-by
+    return 
+        if($sort/@direction = 'ascending') then 
+            let $facets := 
+                for $f in util:eval($path)
+                group by $facet-grp := $f
+                order by 
+                    if($sort/text() = 'value') then $f[1]
+                    else count($f)
+                    ascending
+                return facet:key(normalize-space(string-join($f[1]/text(),' ')), $facet-grp, count($f), $facet-definition)
+            let $count := count($facets)
+            return facet:list-keys($facets, $count, $facet-definition) 
+        else 
+            let $facets := 
+                for $f in util:eval($path)
+                group by $facet-grp := $f
+                order by 
+                    if($sort/text() = 'value') then $f[1]
+                    else count($f)
+                    descending
+                return facet:key(normalize-space(string-join($f[1]/ancestor-or-self::tei:title[1]/text())), $facet-grp, count($f), $facet-definition)
+            let $count := count($facets)   
+            return facet:list-keys($facets, $count, $facet-definition)
+};
+
+declare function facet:author($results as item()*, $facet-definition as element(facet:facet-definition)*) as element(facet:key)*{
+    let $path := concat('$results/',$facet-definition/facet:group-by/facet:sub-path/text())
+    let $sort := $facet-definition/facet:order-by
+    return 
+        if($sort/@direction = 'ascending') then 
+            let $facets := 
+                for $f in util:eval($path)
+                group by $facet-grp := $f
+                let $label := 
+                    if($f[1]/descendant::tei:surname) then 
+                        concat($f[1]/descendant::tei:surname,', ',$f[1]/descendant::tei:forename)
+                    else normalize-space(string-join($f[1]/text()))
+                order by 
+                    if($sort/text() = 'value') then $label
+                    else count($f)
+                    ascending
+                return facet:key($label, $facet-grp, count($f), $facet-definition)
+            let $count := count($facets)
+            return facet:list-keys($facets, $count, $facet-definition) 
+        else 
+            let $facets := 
+                for $f in util:eval($path)
+                group by $facet-grp := $f
+                let $label := 
+                    if($f[1]/descendant::tei:surname) then 
+                        concat($f[1]/descendant::tei:surname,', ',$f[1]/descendant::tei:forename)
+                    else normalize-space(string-join($f[1]/text()))
+                order by 
+                    if($sort/text() = 'value') then $label
+                    else count($f)
+                    descending     
+                return facet:key($label, $facet-grp, count($f), $facet-definition)
+            let $count := count($facets)   
+            return facet:list-keys($facets, $count, $facet-definition)
+};

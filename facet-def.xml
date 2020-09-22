@@ -1,6 +1,6 @@
 <facets xmlns="http://expath.org/ns/facet">
     <facet-definition name="Author">
-        <group-by>
+        <group-by function="facet:author">
             <sub-path>descendant::tei:titleStmt/tei:author</sub-path>
         </group-by>
         <max-values show="10">60</max-values>

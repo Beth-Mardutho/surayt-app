@@ -41,7 +41,7 @@ declare function browse:get-all($node as node(), $model as map(*), $collection a
             data:get-records($collection, 'tei:titleStmt/tei:title[1]')
         else if($browse:lang = 'syr') then 
             data:get-records($collection, 'tei:titleStmt/tei:title[1]/tei:foreign')
-        else data:get-records($collection, "tei:titleStmt/tei:author[1]")
+        else data:get-records($collection, "tei:titleStmt/tei:author[1]/descendant::tei:surname")
     return map{"hits" := $hits }   
 };
 
