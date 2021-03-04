@@ -40,16 +40,21 @@
         <xsl:text> in </xsl:text>
         <xsl:apply-templates select="../descendant::t:title[@level='m'][1]" mode="footnote"/>
         -->
-        
+        <!--
         <xsl:text> </xsl:text>
         <xsl:value-of select="//t:fileDesc/t:editionStmt/t:respStmt[1]/t:resp"/>
         <xsl:text> </xsl:text>
         <xsl:call-template name="responsibility"/>
         <xsl:text>, </xsl:text>
-        
+        -->
+        <xsl:text>, in </xsl:text>
+        <xsl:if test="t:editor[@role='editor']">
+            <xsl:sequence select="local:emit-responsible-persons(t:editor[@role='editor'],'footnote',1)"/>
+            <xsl:text> (ed.),</xsl:text>
+        </xsl:if>
         <!-- monographic title -->
         <xsl:text> </xsl:text>
-        <xsl:apply-templates select="t:title[@level='s'][position()=last()]" mode="footnote"/>
+        <xsl:text>“</xsl:text><xsl:apply-templates select="t:title[@level='s'][position()=last()]" mode="footnote"/><xsl:text>”</xsl:text>
         <xsl:text>, </xsl:text>
         
         <!-- publication date statement -->
